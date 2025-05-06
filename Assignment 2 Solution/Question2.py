@@ -93,7 +93,6 @@ def warmest_coolest_stations(data):
     except IOError:
         print("Error writing warmest_and_coolest_station.txt.")
     return warmest, coolest
-
 # Usage
 try:
     data = read_all_data()
