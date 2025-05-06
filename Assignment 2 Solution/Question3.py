@@ -1,36 +1,57 @@
 import turtle
 
-def draw_tree(length, depth, left_angle, right_angle, reduction):
-    if depth == 0 or length < 2:
+def draw_branch(length, left_angle, right_angle, depth, reduction_factor, is_root=False):
+    if depth == 0:
         return
+
+    if is_root:
+        turtle.color("brown")
+    else:
+        turtle.color("green")
+    turtle.pensize(depth + 2 if is_root else depth + 1)
+
     turtle.forward(length)
+    current_pos = turtle.position()
+    current_heading = turtle.heading()
+
+    
     turtle.left(left_angle)
-    draw_tree(length * reduction, depth - 1, left_angle, right_angle, reduction)
-    turtle.right(left_angle + right_angle)
-    draw_tree(length * reduction, depth - 1, left_angle, right_angle, reduction)
-    turtle.left(right_angle)
-    turtle.backward(length)
+    draw_branch(length * reduction_factor, left_angle, right_angle, depth - 1, reduction_factor)
+
+    
+    turtle.setposition(current_pos)
+    turtle.setheading(current_heading)
+
+
+    turtle.right(right_angle)
+    draw_branch(length * reduction_factor, left_angle, right_angle, depth - 1, reduction_factor)
+
+
+    turtle.setposition(current_pos)
+    turtle.setheading(current_heading)
+
 
 def main():
-    try:
-        left_angle = float(input("Left branch angle: "))
-        right_angle = float(input("Right branch angle: "))
-        length = float(input("Starting branch length: "))
-        depth = int(input("Recursion depth: "))
-        reduction = float(input("Branch length reduction factor (e.g., 0.7): "))
-    except ValueError:
-        print("Error: Invalid input. Expected numbers.")
-        return
+    
+    left_angle = float(input("Enter left branch angle (degrees): "))
+    right_angle = float(input("Enter right branch angle (degrees): "))
+    start_length = float(input("Enter starting branch length (pixels): "))
+    depth = int(input("Enter recursion depth: "))
+    reduction_factor = float(input("Enter branch length reduction factor (e.g., 0.7): "))
 
-    screen = turtle.Screen()
-    screen.reset()
+    
+    turtle.speed("fastest")
     turtle.left(90)
-    turtle.speed('fastest')
-    turtle.delay(0)
-    draw_tree(length, depth, left_angle, right_angle, reduction)
+    turtle.penup()
+    turtle.goto(0, -250)
+    turtle.pendown()
+    turtle.pensize(depth + 3) 
+
+    
+    draw_branch(start_length, left_angle, right_angle, depth, reduction_factor, is_root=True)
+
     turtle.hideturtle()
     turtle.done()
-
 
 if __name__ == "__main__":
     main()
